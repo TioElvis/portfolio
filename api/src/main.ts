@@ -26,8 +26,8 @@ async function bootstrap() {
       const isProduction = process.env.NODE_ENV === 'production';
 
       const allowedOrigins = [
-        `https://${process.env.DOMAIN}`,
-        `https://www.${process.env.DOMAIN}`,
+        `https://${process.env.WEB_DOMAIN}`,
+        `https://www.${process.env.WEB_DOMAIN}`,
       ];
 
       if (!origin) return callback(null, false);
