@@ -1,0 +1,11 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "A personal development blog where I document my projects.",
+  "author": {
+    "email": "elvis.veramijares@gmail.com",
+    "name": "TioElvis"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.30.3"
+}
