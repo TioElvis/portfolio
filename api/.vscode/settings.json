@@ -1,0 +1,11 @@
+{
+  "symbols.files.associations": {
+    "*.module.ts": "nest",
+    "*.guard.ts": "nest-guard",
+    "*.service.ts": "nest-service",
+    "*.controller.ts": "nest-controller"
+  },
+  "symbols.folders.associations": {
+    "schemas": "folder-sky"
+  }
+}
