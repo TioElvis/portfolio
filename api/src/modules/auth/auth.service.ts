@@ -56,7 +56,7 @@ export class AuthService {
       path: '/',
       domain:
         process.env.NODE_ENV === 'production'
-          ? `.${process.env.DOMAIN}`
+          ? `.${this.configService.get<string>('WEB_DOMAIN')}`
           : 'localhost',
       signed: true,
     });
