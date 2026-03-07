@@ -8,6 +8,7 @@ import { MAX_JWT_AGE } from './lib/constants';
 import { AppController } from './app.controller';
 
 import { UserModule } from '@/modules/user/user.module';
+import { AuthModule } from '@/modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UserModule } from '@/modules/user/user.module';
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })
