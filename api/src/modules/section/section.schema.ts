@@ -8,7 +8,7 @@ export class Section {
   @Prop({ type: String, required: true })
   title: string;
 
-  @Prop({ type: String, required: true, unique: true })
+  @Prop({ type: String, required: true })
   slug: string;
 
   @Prop({ type: String, required: true })
