@@ -12,6 +12,7 @@ import { AppController } from './app.controller';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProjectModule } from './modules/project/project.module';
+import { SectionModule } from './modules/section/section.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ProjectModule } from './modules/project/project.module';
     UserModule,
     AuthModule,
     ProjectModule,
+    SectionModule,
   ],
   controllers: [AppController],
   providers: [JwtStrategy],
