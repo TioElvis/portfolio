@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -44,5 +45,11 @@ export class ProjectController {
     @Body() body: UpdateProjectDto,
   ) {
     return await this.projectService.update(id, body);
+  }
+
+  @Delete('delete/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async delete(@Param('id') id: Types.ObjectId) {
+    return await this.projectService.delete(id);
   }
 }

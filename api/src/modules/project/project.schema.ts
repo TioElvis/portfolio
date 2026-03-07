@@ -41,3 +41,17 @@ export class Project {
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
+
+ProjectSchema.pre('deleteOne', { document: true }, async function () {
+  if (this.sections && this.sections.length > 0) {
+    const SectionModel = this.model(Section.name);
+
+    for (const sectionId of this.sections) {
+      const section = await SectionModel.findById(sectionId);
+
+      if (section) {
+        await section.deleteOne();
+      }
+    }
+  }
+});
