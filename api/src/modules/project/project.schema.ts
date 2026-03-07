@@ -1,5 +1,7 @@
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+import { Section, SectionDocument } from 'src/modules/section/section.schema';
 
 export type ProjectDocument = HydratedDocument<Project>;
 
@@ -34,8 +36,8 @@ export class Project {
   @Prop({ type: String })
   demoUrl?: string;
 
-  // @Prop({ type: [{ type: Types.ObjectId, ref: Section.name }] })
-  // sections?: Types.ObjectId[] | SectionDocument[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: Section.name }] })
+  sections?: Types.ObjectId[] | SectionDocument[];
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
