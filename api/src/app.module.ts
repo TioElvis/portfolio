@@ -4,8 +4,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import { MAX_JWT_AGE } from './lib/constants';
 import { AppController } from './app.controller';
-import { UserModule } from './user/user.module';
+
+import { UserModule } from '@/modules/user/user.module';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { UserModule } from './user/user.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '7d' },
+        signOptions: { expiresIn: MAX_JWT_AGE },
       }),
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
