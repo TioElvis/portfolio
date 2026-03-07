@@ -1,4 +1,3 @@
-import 'tsconfig-paths/register';
 import {
   FastifyAdapter,
   NestFastifyApplication,
