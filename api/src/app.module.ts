@@ -5,6 +5,8 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { MAX_JWT_AGE } from './lib/constants';
+import { JwtStrategy } from './strategies/jwt.strategy';
+
 import { AppController } from './app.controller';
 
 import { UserModule } from '@/modules/user/user.module';
@@ -31,10 +33,11 @@ import { AuthModule } from '@/modules/auth/auth.module';
         signOptions: { expiresIn: MAX_JWT_AGE },
       }),
     }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule,
     UserModule,
     AuthModule,
   ],
   controllers: [AppController],
+  providers: [JwtStrategy],
 })
 export class AppModule {}
