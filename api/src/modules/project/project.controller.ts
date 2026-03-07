@@ -1,5 +1,14 @@
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { Types } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 
 import { ProjectService } from './project.service';
 
@@ -19,5 +28,10 @@ export class ProjectController {
   @Get('find')
   async find(@Query() query: QueryProjectDto) {
     return await this.projectService.find(query);
+  }
+
+  @Get('find-by-id/:id')
+  async findById(@Param('id') id: Types.ObjectId) {
+    return await this.projectService.findById(id, true);
   }
 }

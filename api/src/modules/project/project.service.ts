@@ -3,8 +3,9 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Project, ProjectDocument } from './project.schema';
@@ -83,5 +84,21 @@ export class ProjectService {
       console.error('Error finding projects:', error);
       throw new BadRequestException('Failed to find projects');
     }
+  }
+
+  async findById(id: Types.ObjectId, populate: boolean = false) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid project id');
+    }
+
+    const project = populate
+      ? await this.projectModel.findById(id).populate('sections').exec()
+      : await this.projectModel.findById(id).exec();
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    return { message: 'Project retrieved successfully', data: project };
   }
 }
