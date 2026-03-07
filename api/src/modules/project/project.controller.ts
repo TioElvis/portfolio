@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -14,6 +15,7 @@ import { ProjectService } from './project.service';
 
 import { QueryProjectDto } from './dto/query-project.dio';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Controller('project')
 export class ProjectController {
@@ -33,5 +35,14 @@ export class ProjectController {
   @Get('find-by-id/:id')
   async findById(@Param('id') id: Types.ObjectId) {
     return await this.projectService.findById(id, true);
+  }
+
+  @Patch('update/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async update(
+    @Param('id') id: Types.ObjectId,
+    @Body() body: UpdateProjectDto,
+  ) {
+    return await this.projectService.update(id, body);
   }
 }

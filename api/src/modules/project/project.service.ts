@@ -12,6 +12,7 @@ import { Project, ProjectDocument } from './project.schema';
 
 import { QueryProjectDto } from './dto/query-project.dio';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 import { SectionService } from 'src/modules/section/section.service';
 
@@ -100,5 +101,28 @@ export class ProjectService {
     }
 
     return { message: 'Project retrieved successfully', data: project };
+  }
+
+  async update(id: Types.ObjectId, body: UpdateProjectDto) {
+    const { data: project } = await this.findById(id);
+
+    if (body.slug && body.slug !== project.slug) {
+      const existingProject = await this.projectModel
+        .findOne({ slug: body.slug, _id: { $ne: id } })
+        .exec();
+
+      if (existingProject) {
+        throw new BadRequestException('Project with this slug already exists');
+      }
+    }
+
+    try {
+      await project.updateOne({ $set: body }, { runValidators: true });
+
+      return { message: 'Project updated successfully' };
+    } catch (error) {
+      console.error('Error updating project:', error);
+      throw new BadRequestException('Failed to update project');
+    }
   }
 }
