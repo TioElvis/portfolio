@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
 
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ProjectModule } from './modules/project/project.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthModule } from './modules/auth/auth.module';
     PassportModule,
     UserModule,
     AuthModule,
+    ProjectModule,
   ],
   controllers: [AppController],
   providers: [JwtStrategy],
