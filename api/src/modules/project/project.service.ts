@@ -1,7 +1,5 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,17 +9,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Project, ProjectDocument } from './project.schema';
 
 import { QueryProjectDto } from './dto/query-project.dio';
-import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { CreateProjectDto } from './dto/create-project.dto';
 
-import { SectionService } from 'src/modules/section/section.service';
+import { Section, SectionDocument } from 'src/modules/section/section.schema';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
-    @Inject(forwardRef(() => SectionService))
-    private sectionService: SectionService,
+    @InjectModel(Section.name) private sectionModel: Model<SectionDocument>,
   ) {}
 
   async create(body: CreateProjectDto) {
@@ -87,24 +84,66 @@ export class ProjectService {
     }
   }
 
+  private buildTree(sections: SectionDocument[], parent?: Types.ObjectId) {
+    const children = sections.filter((section) => {
+      if (!section.parent && !parent) return true;
+
+      if (section.parent instanceof Types.ObjectId) {
+        return String(section.parent) === String(parent);
+      }
+
+      return false;
+    });
+
+    const tree: Section[] = children.map((child) => {
+      const data = this.buildTree(sections, child._id);
+
+      return {
+        ...child.toObject(),
+        sections: data.length > 0 ? data : undefined,
+      };
+    });
+
+    return tree;
+  }
+
+  private async findSections(projectId: Types.ObjectId) {
+    try {
+      return await this.sectionModel
+        .find({ project: projectId })
+        .sort({ order: 1 })
+        .exec();
+    } catch (error) {
+      console.error('Error finding sections:', error);
+      throw new Error('Failed to find sections');
+    }
+  }
+
   async findById(id: Types.ObjectId, populate: boolean = false) {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid project id');
     }
 
-    const project = populate
-      ? await this.projectModel.findById(id).populate('sections').exec()
-      : await this.projectModel.findById(id).exec();
+    const project = await this.projectModel.findById(id).exec();
 
     if (!project) {
       throw new NotFoundException('Project not found');
+    }
+
+    if (populate === true) {
+      const data = this.buildTree(await this.findSections(project._id));
+
+      return {
+        message: 'Project retrieved successfully',
+        data: { project, sections: data.length > 0 ? data : undefined },
+      };
     }
 
     return { message: 'Project retrieved successfully', data: project };
   }
 
   async update(id: Types.ObjectId, body: UpdateProjectDto) {
-    const { data: project } = await this.findById(id);
+    const project = (await this.findById(id)).data as ProjectDocument;
 
     if (body.slug && body.slug !== project.slug) {
       const existingProject = await this.projectModel
@@ -127,10 +166,13 @@ export class ProjectService {
   }
 
   async delete(id: Types.ObjectId) {
-    const { data: project } = await this.findById(id);
+    const project = (await this.findById(id)).data as ProjectDocument;
 
     try {
-      await project.deleteOne();
+      await Promise.all([
+        this.sectionModel.deleteMany({ project: project._id }),
+        project.deleteOne(),
+      ]);
 
       return { message: 'Project deleted successfully' };
     } catch (error) {

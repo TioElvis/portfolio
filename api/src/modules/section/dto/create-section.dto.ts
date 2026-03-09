@@ -36,12 +36,10 @@ export class CreateSectionDto {
 
   /* [REF ATTRIBUTES] */
 
-  // If have a projectId is a main section
-  @IsOptional()
+  @IsNotEmpty()
   @IsMongoId()
-  projectId?: Types.ObjectId;
+  projectId: Types.ObjectId;
 
-  // If have a parentId is a subsection
   @IsOptional()
   @IsMongoId()
   parentId?: Types.ObjectId;

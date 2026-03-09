@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Types } from 'mongoose';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { SectionService } from './section.service';
 
@@ -11,5 +12,10 @@ export class SectionController {
   @Post('create')
   async create(@Body() body: CreateSectionDto) {
     return await this.sectionService.create(body);
+  }
+
+  @Get('find-by-id/:id')
+  async findById(@Param('id') id: Types.ObjectId) {
+    return await this.sectionService.findById(id);
   }
 }
