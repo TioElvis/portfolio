@@ -11,6 +11,7 @@ import { Section, SectionDocument } from './section.schema';
 import { CreateSectionDto } from './dto/create-section.dto';
 
 import { Project, ProjectDocument } from 'src/modules/project/project.schema';
+import { UpdateSectionDto } from './dto/update-section.dto';
 
 @Injectable()
 export class SectionService {
@@ -80,5 +81,33 @@ export class SectionService {
     }
 
     return { message: 'Section found', data: section };
+  }
+
+  async update(id: Types.ObjectId, body: UpdateSectionDto) {
+    const { data: section } = await this.findById(id);
+
+    if (body.slug) {
+      const existingSection = await this.sectionModel.findOne({
+        slug: body.slug,
+        project: section.project,
+        parent: section.parent ?? null,
+        _id: { $ne: id },
+      });
+
+      if (existingSection) {
+        throw new BadRequestException(
+          'A section with this slug already exists at the same level',
+        );
+      }
+    }
+
+    try {
+      await section.updateOne({ $set: body }, { runValidators: true });
+
+      return { message: 'Section updated successfully' };
+    } catch (error) {
+      console.error('Error updating section:', error);
+      throw new BadRequestException('Failed to update section');
+    }
   }
 }
