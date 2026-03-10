@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { cn } from "@/lib/utils";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -18,7 +19,9 @@ interface Props {
 export default function Layout({ children }: Readonly<Props>) {
   return (
     <html lang="en" className={cn("font-sans", inter.variable)}>
-      <body>{children}</body>
+      <body>
+        <TooltipProvider>{children}</TooltipProvider>
+      </body>
     </html>
   );
 }
