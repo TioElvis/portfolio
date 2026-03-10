@@ -34,10 +34,7 @@ SectionSchema.pre(
   async function () {
     const SectionModel = this.model(Section.name);
 
-    await SectionModel.deleteMany({
-      project: this.project,
-      _id: { $ne: this._id },
-    });
+    await SectionModel.deleteMany({ project: this.project, parent: this._id });
   },
 );
 

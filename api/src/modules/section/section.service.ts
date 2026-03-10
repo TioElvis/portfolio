@@ -21,10 +21,16 @@ export class SectionService {
   ) {}
 
   async create(body: CreateSectionDto) {
+    const projectId = new Types.ObjectId(body.projectId);
+
+    const parentId = body.parentId
+      ? new Types.ObjectId(body.parentId)
+      : undefined;
+
     const existingSection = await this.sectionModel.findOne({
       slug: body.slug,
-      project: body.projectId,
-      parent: body.parentId ?? null,
+      project: projectId,
+      parent: parentId,
     });
 
     if (existingSection) {
@@ -32,10 +38,24 @@ export class SectionService {
         'A section with this slug already exists at the same level',
       );
     }
+
+    const lastSection = await this.sectionModel
+      .findOne({
+        project: projectId,
+        parent: parentId,
+      })
+      .sort({ order: -1 })
+      .select({ order: 1 })
+      .lean()
+      .exec();
+
+    const nextOrder = lastSection ? lastSection.order + 1 : 0;
+
     const payload: Section = {
       ...body,
-      project: new Types.ObjectId(body.projectId),
-      parent: body.parentId ? new Types.ObjectId(body.parentId) : undefined,
+      order: nextOrder,
+      project: projectId,
+      parent: parentId,
     };
 
     const section = new this.sectionModel(payload);
@@ -116,6 +136,25 @@ export class SectionService {
 
     try {
       await section.deleteOne();
+
+      const siblings = await this.sectionModel
+        .find({
+          project: section.project,
+          parent: section.parent ?? null,
+        })
+        .sort({ order: 1 })
+        .exec();
+
+      const bulkOps = siblings.map((sibling, index) => ({
+        updateOne: {
+          filter: { _id: sibling._id },
+          update: { $set: { order: index } },
+        },
+      }));
+
+      if (bulkOps.length > 0) {
+        await this.sectionModel.bulkWrite(bulkOps);
+      }
 
       return { message: 'Section deleted successfully' };
     } catch (error) {

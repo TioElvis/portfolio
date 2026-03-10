@@ -1,7 +1,6 @@
 import {
   IsMongoId,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -29,10 +28,6 @@ export class CreateSectionDto {
   @IsNotEmpty()
   @IsString()
   content: string; // Markdown content
-
-  @IsNotEmpty()
-  @IsNumber()
-  order: number;
 
   /* [REF ATTRIBUTES] */
 
