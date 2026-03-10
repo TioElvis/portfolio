@@ -9,9 +9,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Section, SectionDocument } from './section.schema';
 
 import { CreateSectionDto } from './dto/create-section.dto';
+import { UpdateSectionDto } from './dto/update-section.dto';
 
 import { Project, ProjectDocument } from 'src/modules/project/project.schema';
-import { UpdateSectionDto } from './dto/update-section.dto';
 
 @Injectable()
 export class SectionService {
@@ -108,6 +108,19 @@ export class SectionService {
     } catch (error) {
       console.error('Error updating section:', error);
       throw new BadRequestException('Failed to update section');
+    }
+  }
+
+  async delete(id: Types.ObjectId) {
+    const { data: section } = await this.findById(id);
+
+    try {
+      await section.deleteOne();
+
+      return { message: 'Section deleted successfully' };
+    } catch (error) {
+      console.error('Error deleting section:', error);
+      throw new BadRequestException('Failed to delete section');
     }
   }
 }

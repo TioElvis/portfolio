@@ -1,5 +1,13 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { Types } from 'mongoose';
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { SectionService } from './section.service';
 
@@ -26,5 +34,10 @@ export class SectionController {
     @Body() body: UpdateSectionDto,
   ) {
     return await this.sectionService.update(id, body);
+  }
+
+  @Delete('delete/:id')
+  async delete(@Param('id') id: Types.ObjectId) {
+    return await this.sectionService.delete(id);
   }
 }
