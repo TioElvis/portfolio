@@ -119,7 +119,7 @@ export class ProjectService {
     }
   }
 
-  async findById(id: Types.ObjectId, populate: boolean = false) {
+  private async findById(id: Types.ObjectId) {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid project id');
     }
@@ -130,20 +130,26 @@ export class ProjectService {
       throw new NotFoundException('Project not found');
     }
 
-    if (populate === true) {
-      const data = this.buildTree(await this.findSections(project._id));
-
-      return {
-        message: 'Project retrieved successfully',
-        data: { project, sections: data.length > 0 ? data : undefined },
-      };
-    }
-
     return { message: 'Project retrieved successfully', data: project };
   }
 
+  async findBySlug(slug: string) {
+    const project = await this.projectModel.findOne({ slug }).exec();
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    const data = this.buildTree(await this.findSections(project._id));
+
+    return {
+      message: 'Project retrieved successfully',
+      data: { project, sections: data.length > 0 ? data : undefined },
+    };
+  }
+
   async update(id: Types.ObjectId, body: UpdateProjectDto) {
-    const project = (await this.findById(id)).data as ProjectDocument;
+    const { data: project } = await this.findById(id);
 
     if (body.slug && body.slug !== project.slug) {
       const existingProject = await this.projectModel
@@ -166,7 +172,7 @@ export class ProjectService {
   }
 
   async delete(id: Types.ObjectId) {
-    const project = (await this.findById(id)).data as ProjectDocument;
+    const { data: project } = await this.findById(id);
 
     try {
       await Promise.all([

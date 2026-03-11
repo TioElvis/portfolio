@@ -33,9 +33,9 @@ export class ProjectController {
     return await this.projectService.find(query);
   }
 
-  @Get('find-by-id/:id')
-  async findById(@Param('id') id: Types.ObjectId) {
-    return await this.projectService.findById(id, true);
+  @Get('find-by-slug/:slug')
+  async findBySlug(@Param('slug') slug: string) {
+    return await this.projectService.findBySlug(slug);
   }
 
   @Patch('update/:id')
