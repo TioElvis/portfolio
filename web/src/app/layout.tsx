@@ -1,13 +1,13 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Serif } from "next/font/google";
 
 import { cn } from "@/lib/utils";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const notoSerif = Noto_Serif({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
   title: "TioElvis",
@@ -22,7 +22,7 @@ export default function Layout({ children }: Readonly<Props>) {
   return (
     <html
       lang="en"
-      className={cn("font-sans", inter.variable)}
+      className={cn("font-serif", notoSerif.variable)}
       suppressHydrationWarning>
       <body>
         <ThemeProvider
