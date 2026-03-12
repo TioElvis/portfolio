@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Section, SectionDocument } from './section.schema';
 
+import { QuerySectionDto } from './dto/query-section.dto';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 
@@ -89,7 +90,7 @@ export class SectionService {
     }
   }
 
-  async findById(id: Types.ObjectId) {
+  private async findById(id: Types.ObjectId) {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid section id');
     }
@@ -99,6 +100,47 @@ export class SectionService {
     if (!section) {
       throw new NotFoundException('Section not found');
     }
+
+    return { message: 'Section found', data: section };
+  }
+
+  async find(query: QuerySectionDto) {
+    const project = await this.projectModel
+      .findOne({ slug: query.project })
+      .select({ _id: 1 })
+      .lean()
+      .exec();
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    if (query.parent) {
+      const parent = await this.sectionModel
+        .findOne({
+          slug: query.parent,
+          project: project._id,
+        })
+        .select({ _id: 1 })
+        .lean()
+        .exec();
+
+      if (!parent) {
+        throw new NotFoundException('Parent section not found');
+      }
+
+      const section = await this.sectionModel
+        .findOne({ project: project._id, parent: parent._id, slug: query.slug })
+        .lean()
+        .exec();
+
+      return { message: 'Section found', data: section };
+    }
+
+    const section = await this.sectionModel
+      .findOne({ project: project._id, slug: query.slug })
+      .lean()
+      .exec();
 
     return { message: 'Section found', data: section };
   }

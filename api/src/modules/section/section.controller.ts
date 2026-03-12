@@ -6,11 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 
 import { SectionService } from './section.service';
 
+import { QuerySectionDto } from './dto/query-section.dto';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 
@@ -23,9 +25,9 @@ export class SectionController {
     return await this.sectionService.create(body);
   }
 
-  @Get('find-by-id/:id')
-  async findById(@Param('id') id: Types.ObjectId) {
-    return await this.sectionService.findById(id);
+  @Get('find')
+  async find(@Query() query: QuerySectionDto) {
+    return await this.sectionService.find(query);
   }
 
   @Patch('update/:id')
