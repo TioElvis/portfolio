@@ -11,28 +11,26 @@ export default function Page() {
       <section className="relative min-h-screen grid place-items-center">
         <header className="absolute top-4 left-4 hidden sm:block">
           <div className="flex gap-2">
-            <div className="size-8 rounded-md flex items-center justify-center">
-              🇻🇪
-            </div>
+            <div className="flex items-center justify-center">🇻🇪</div>
             <div className="flex flex-col gap-0.5">
-              <span className="text-[9px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">
-                Full Stack Dev
+              <span className="text-[9px] font-semibold tracking-[0.15em] text-muted-foreground">
+                FULL STACK DEVE
               </span>
-              <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-primary">
-                Building the Future
+              <span className="text-[9px] font-bold tracking-[0.15em] text-primary">
+                BUILDING THE FUTURE
               </span>
             </div>
           </div>
         </header>
         <div className="text-center">
-          <h1 className="text-8xl sm:text-9xl md:text-[10rem] lg:text-[12rem] xl:text-[14rem] 2xl:text-[16rem] font-black text-caracas">
+          <h1 className="text-8xl sm:text-[8rem] lg:text-[12rem] xl:text-[14rem] 2xl:text-[16rem] font-black text-caracas">
             TioElvis
           </h1>
-          <h3 className="font-light uppercase text-2xl tracking-widest">
+          <h3 className="font-light uppercase text-xl md:text-2xl tracking-widest">
             Full stack developer
           </h3>
         </div>
-        <div className="absolute bottom-8 flex flex-col items-center text-muted-foreground">
+        <div className="absolute bottom-24 flex flex-col items-center text-muted-foreground">
           <IconChevronDown className="animate-bounce" />
         </div>
       </section>
