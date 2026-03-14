@@ -49,7 +49,6 @@ export class GithubService implements OnModuleInit {
         data: {
           name: data.name,
           description: data.description,
-          language: data.language,
           defaultBranch: data.default_branch,
           owner: data.owner.login,
           url: data.html_url,
@@ -113,7 +112,10 @@ export class GithubService implements OnModuleInit {
         }),
       );
 
-      return { message: 'Repository files found successfully', data: files };
+      return {
+        message: 'Repository files found successfully',
+        data: { ...repo, files },
+      };
     } catch (error) {
       console.error('Error fetching repository files:', error);
       throw new BadRequestException('Failed to fetch repository files');
