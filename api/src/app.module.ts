@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
 
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { GithubModule } from './modules/github/github.module';
 import { ProjectModule } from './modules/project/project.module';
 import { SectionModule } from './modules/section/section.module';
 
@@ -40,6 +41,7 @@ import { SectionModule } from './modules/section/section.module';
     AuthModule,
     ProjectModule,
     SectionModule,
+    GithubModule,
   ],
   controllers: [AppController],
   providers: [JwtStrategy],
