@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
 
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { GeminiModule } from './modules/gemini/gemini.module';
 import { GithubModule } from './modules/github/github.module';
 import { ProjectModule } from './modules/project/project.module';
 import { SectionModule } from './modules/section/section.module';
@@ -42,6 +43,7 @@ import { SectionModule } from './modules/section/section.module';
     ProjectModule,
     SectionModule,
     GithubModule,
+    GeminiModule,
   ],
   controllers: [AppController],
   providers: [JwtStrategy],
