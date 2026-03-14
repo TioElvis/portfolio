@@ -50,7 +50,7 @@ export class GithubService implements OnModuleInit {
         .filter((item) => item.type === 'blob')
         .map((item) => item.path)
         .filter(
-          (path) => !IGNORED_PATHS.some((ignored) => path.startsWith(ignored)),
+          (path) => !IGNORED_PATHS.some((ignored) => path?.startsWith(ignored)),
         );
 
       return { message: 'Repository files found successfully', data: files };
