@@ -16,5 +16,6 @@ import { Project, ProjectSchema } from 'src/modules/project/project.schema';
   ],
   controllers: [SectionController],
   providers: [SectionService],
+  exports: [SectionService],
 })
 export class SectionModule {}
